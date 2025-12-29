@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Love Letters to You</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ffe6e6, #ffcccc, #ffb3b3);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Floating hearts background */
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.3;
+            animation: float 8s infinite linear;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            z-index: 1;
+            position: relative;
+            width: 100%;
+        }
+
+        h1 {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 3.5rem;
+            color: #cc0066;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            animation: heartbeat 2s infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            5% { transform: scale(1.1); }
+            10% { transform: scale(1); }
+            15% { transform: scale(1.1); }
+            20% { transform: scale(1); }
+        }
+
+        .subtitle {
+            color: #99004d;
+            font-size: 1.2rem;
+            font-style: italic;
+        }
+
+        .love-letters-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+            max-width: 1400px;
+            width: 100%;
+            margin-bottom: 40px;
+            z-index: 1;
+        }
+
+        .letter-envelope {
+            width: 250px;
+            height: 180px;
+            background: linear-gradient(135deg, #ff4d94, #ff0066);
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            box-shadow: 0 10px 20px rgba(204, 0, 102, 0.2);
+        }
+
+        .letter-envelope:hover {
+            transform: translateY(-10px) rotate(2deg);
+            box-shadow: 0 15px 30px rgba(204, 0, 102, 0.3);
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(135deg, #ff3385, #e6005c);
+            clip-path: polygon(0 0, 100% 0, 50% 50%);
+            border-radius: 10px 10px 0 0;
+            z-index: 2;
+        }
+
+        .envelope-body {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
+            background: linear-gradient(135deg, #ff66a3, #ff1a75);
+            border-radius: 0 0 10px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .letter-title {
+            color: white;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            padding: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            max-width: 90%;
+        }
+
+        .letter-date {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.8rem;
+        }
+
+        /* Letter Modal */
+        .letter-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .letter-content {
+            background: linear-gradient(135deg, #fff0f5, #ffe6f2);
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: slideUp 0.5s;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: #ff0066;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+
+        .close-modal:hover {
+            transform: rotate(90deg);
+        }
+
+        .letter-body {
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+            overflow-y: auto;
+            max-height: calc(90vh - 100px);
+        }
+
+        @media (min-width: 768px) {
+            .letter-body {
+                flex-direction: row;
+            }
+        }
+
+        .letter-photo-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        @media (min-width: 768px) {
+            .letter-photo-section {
+                margin-bottom: 0;
+                margin-right: 30px;
+            }
+        }
+
+        .photo-frame {
+            width: 100%;
+            max-width: 350px;
+            aspect-ratio: 4/3;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 10px solid #ffccdd;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ffccdd, #ffb3c6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #cc0066;
+            font-size: 1.2rem;
+        }
+
+        .photo-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .upload-photo-btn {
+            background: linear-gradient(135deg, #ff4d94, #ff0066);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .upload-photo-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 0, 102, 0.3);
+        }
+
+        .letter-text-section {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .letter-date-display {
+            color: #cc0066;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .letter-textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 20px;
+            border: 2px solid #ffccdd;
+            border-radius: 15px;
+            font-family: 'Georgia', serif;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            resize: vertical;
+            background: rgba(255, 255, 255, 0.9);
+            color: #660033;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+
+        .letter-textarea:focus {
+            outline: none;
+            border-color: #ff0066;
+            box-shadow: 0 0 0 3px rgba(255, 0, 102, 0.1);
+        }
+
+        .letter-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .action-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #4dff88, #00cc44);
+            color: white;
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #ff6666, #cc0000);
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .new-letter-btn {
+            background: linear-gradient(135deg, #ff4d94, #ff0066);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-family: 'Brush Script MT', cursive;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 10px 20px rgba(204, 0, 102, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .new-letter-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(204, 0, 102, 0.3);
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #99004d;
+            font-style: italic;
+            z-index: 1;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #cc0066;
+            z-index: 1;
+        }
+
+        .empty-state h2 {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-state p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        /* File input */
+        #photoUpload {
+            display: none;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .letter-envelope {
+                width: 200px;
+                height: 150px;
+            }
+            
+            .letter-content {
+                width: 95%;
+            }
+            
+            .letter-body {
+                padding: 20px;
+            }
+            
+            .letter-actions {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Background hearts -->
+    <div id="heartsContainer"></div>
+    
+    <div class="header">
+        <h1>My Love Letters to You</h1>
+        <p class="subtitle">Click on an envelope to read and write our love story</p>
+    </div>
+    
+    <div class="love-letters-container" id="lettersContainer">
+        <!-- Letters will be added here dynamically -->
+        <div class="empty-state" id="emptyState">
+            <h2>No Love Letters Yet</h2>
+            <p>Create your first love letter to begin our beautiful journey together ❤️</p>
+            <button class="new-letter-btn" onclick="createNewLetter()">
+                <i class="fas fa-heart"></i> Write First Love Letter
+            </button>
+        </div>
+    </div>
+    
+    <button class="new-letter-btn" id="newLetterBtn" onclick="createNewLetter()" style="display: none;">
+        <i class="fas fa-plus"></i> Write New Love Letter
+    </button>
+    
+    <div class="footer">
+        Made with <i class="fas fa-heart" style="color: #ff0066;"></i> for the love of my life
+    </div>
+    
+    <!-- Letter Modal -->
+    <div class="letter-modal" id="letterModal">
+        <div class="letter-content">
+            <button class="close-modal" onclick="closeLetterModal()">&times;</button>
+            <div class="letter-body" id="letterBody">
+                <!-- Content will be filled dynamically -->
+            </div>
+        </div>
+    </div>
+    
+    <input type="file" id="photoUpload" accept="image/*">
+
+    <script>
+        // Initialize letters array from localStorage or create empty
+        let loveLetters = JSON.parse(localStorage.getItem('loveLetters')) || [];
+        let currentLetterIndex = null;
+        
+        // Create background hearts
+        function createHearts() {
+            const heartsContainer = document.getElementById('heartsContainer');
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                heartsContainer.appendChild(heart);
+            }
+        }
+        
+        // Load and display all letters
+        function loadLetters() {
+            const lettersContainer = document.getElementById('lettersContainer');
+            const emptyState = document.getElementById('emptyState');
+            const newLetterBtn = document.getElementById('newLetterBtn');
+            
+            if (loveLetters.length === 0) {
+                emptyState.style.display = 'block';
+                lettersContainer.innerHTML = '';
+                lettersContainer.appendChild(emptyState);
+                newLetterBtn.style.display = 'none';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            newLetterBtn.style.display = 'flex';
+            lettersContainer.innerHTML = '';
+            
+            loveLetters.forEach((letter, index) => {
+                const envelope = document.createElement('div');
+                envelope.className = 'letter-envelope';
+                envelope.dataset.index = index;
+                
+                const flap = document.createElement('div');
+                flap.className = 'envelope-flap';
+                
+                const body = document.createElement('div');
+                body.className = 'envelope-body';
+                
+                const title = document.createElement('div');
+                title.className = 'letter-title';
+                title.textContent = letter.title || `Love Letter #${index + 1}`;
+                
+                const date = document.createElement('div');
+                date.className = 'letter-date';
+                date.textContent = letter.date || 'Today';
+                
+                body.appendChild(title);
+                body.appendChild(date);
+                
+                envelope.appendChild(flap);
+                envelope.appendChild(body);
+                
+                envelope.addEventListener('click', () => openLetterModal(index));
+                
+                lettersContainer.appendChild(envelope);
+            });
+        }
+        
+        // Open letter modal
+        function openLetterModal(index) {
+            currentLetterIndex = index;
+            const letter = loveLetters[index];
+            const modal = document.getElementById('letterModal');
+            const letterBody = document.getElementById('letterBody');
+            
+            letterBody.innerHTML = `
+                <div class="letter-photo-section">
+                    <div class="photo-frame" id="photoFrame">
+                        ${letter.photo ? 
+                            `<img src="${letter.photo}" alt="Our Photo" id="displayedPhoto">` : 
+                            `<div class="photo-placeholder">
+                                <i class="fas fa-heart"></i>
+                                <p>Our Photo Together</p>
+                            </div>`
+                        }
+                    </div>
+                    <button class="upload-photo-btn" onclick="uploadPhoto()">
+                        <i class="fas fa-camera"></i> 
+                        ${letter.photo ? 'Change Photo' : 'Add Our Photo'}
+                    </button>
+                </div>
+                <div class="letter-text-section">
+                    <div class="letter-date-display">
+                        ${letter.date || new Date().toLocaleDateString('en-US', { 
+                            weekday: 'long', 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                        })}
+                    </div>
+                    <textarea class="letter-textarea" id="letterText" placeholder="Write your heartfelt message here...">${letter.message || ''}</textarea>
+                    <div class="letter-actions">
+                        <button class="action-btn save-btn" onclick="saveLetter()">
+                            <i class="fas fa-save"></i> Save Love Letter
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteLetter()">
+                            <i class="fas fa-trash"></i> Delete Letter
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Close letter modal
+        function closeLetterModal() {
+            const modal = document.getElementById('letterModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            currentLetterIndex = null;
+        }
+        
+        // Create new letter
+        function createNewLetter() {
+            const newLetter = {
+                title: `Love Letter #${loveLetters.length + 1}`,
+                date: new Date().toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                }),
+                message: '',
+                photo: ''
+            };
+            
+            loveLetters.push(newLetter);
+            currentLetterIndex = loveLetters.length - 1;
+            saveToLocalStorage();
+            loadLetters();
+            openLetterModal(currentLetterIndex);
+        }
+        
+        // Save letter
+        function saveLetter() {
+            if (currentLetterIndex === null) return;
+            
+            const textarea = document.getElementById('letterText');
+            loveLetters[currentLetterIndex].message = textarea.value;
+            
+            // Update title based on first few words of message
+            const firstWords = textarea.value.split(' ').slice(0, 5).join(' ');
+            if (firstWords.length > 0 && textarea.value.length > 0) {
+                loveLetters[currentLetterIndex].title = firstWords + (textarea.value.split(' ').length > 5 ? '...' : '');
+            }
+            
+            saveToLocalStorage();
+            loadLetters();
+            
+            // Show success message
+            alert('Love letter saved successfully! 💖');
+        }
+        
+        // Delete letter
+        function deleteLetter() {
+            if (currentLetterIndex === null || !confirm('Are you sure you want to delete this love letter? 💔')) {
+                return;
+            }
+            
+            loveLetters.splice(currentLetterIndex, 1);
+            saveToLocalStorage();
+            loadLetters();
+            closeLetterModal();
+        }
+        
+        // Upload photo
+        function uploadPhoto() {
+            document.getElementById('photoUpload').click();
+        }
+        
+        // Handle photo upload
+        document.getElementById('photoUpload').addEventListener('change', function(e) {
+            if (currentLetterIndex === null) return;
+            
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                loveLetters[currentLetterIndex].photo = event.target.result;
+                saveToLocalStorage();
+                
+                // Update displayed photo
+                const photoFrame = document.getElementById('photoFrame');
+                photoFrame.innerHTML = `<img src="${event.target.result}" alt="Our Photo" id="displayedPhoto">`;
+                
+                // Update upload button text
+                const uploadBtn = document.querySelector('.upload-photo-btn');
+                uploadBtn.innerHTML = `<i class="fas fa-camera"></i> Change Photo`;
+            };
+            reader.readAsDataURL(file);
+        });
+        
+        // Save to localStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('loveLetters', JSON.stringify(loveLetters));
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('letterModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLetterModal();
+            }
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            createHearts();
+            loadLetters();
+            
+            // Add sample letter if empty
+            if (loveLetters.length === 0) {
+                loveLetters.push({
+                    title: "My First Love Letter",
+                    date: new Date().toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    }),
+                    message: "My dearest love,\n\nFrom the moment we met, you've filled my life with joy and meaning. Every day with you is a blessing, and my heart beats only for you.\n\nYou are my sunshine on cloudy days, my comfort in difficult times, and my greatest happiness. I cherish every moment we spend together, from our laughter-filled dates to our quiet evenings at home.\n\nI promise to love you more with each passing day, to support you in all your dreams, and to be by your side through life's journey.\n\nForever yours,\n[Your Name]",
+                    photo: ""
+                });
+                saveToLocalStorage();
+                loadLetters();
+            }
+        });
+    </script>
+</body>
+</html>
